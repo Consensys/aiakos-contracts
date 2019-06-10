@@ -3,6 +3,7 @@ pragma solidity ^0.5.0;
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./Releases.sol";
 
 /**
  * @title Aiakos
@@ -12,10 +13,12 @@ contract Aiakos is Ownable  {
 
   using SafeMath for uint256;
   using Roles for Roles.Role;
+  using Releases for Releases.Release;
   
   Roles.Role private maintainers;
 
   uint private requiredNumberOfMaintainers;
+  mapping(string => Releases.Release) releases;
 
   constructor (uint _requiredNumberOfMaintainers) public{
     Ownable._transferOwnership(msg.sender);
@@ -71,8 +74,15 @@ contract Aiakos is Ownable  {
   /**
   * @dev Throws if address is empty
   */
-  modifier nonEmptyAddress(address value){
+  modifier nonEmptyAddress(address value)
+  {
     require(value != address(0));
+    _;
+  }
+  
+  modifier onlyMaintainer() 
+  {
+    require(maintainers.has(msg.sender), "Aiakos: caller is not a maintainer.");
     _;
   }
 
