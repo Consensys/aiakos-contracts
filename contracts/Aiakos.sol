@@ -11,6 +11,10 @@ contract Aiakos is Ownable  {
 
   using SafeMath for uint256;
 
+  constructor () public{
+      
+  }
+  
   /**
   * @dev Allows the current owner to transfer control of the contract to a newOwner.
   * @param _newOwner address of the new owner
