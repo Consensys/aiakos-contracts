@@ -1,0 +1,19 @@
+stages:
+  - build
+  - test
+  - doc
+
+docsite:
+  image: matkt/solc-image
+  stage: doc
+  tags: [gitlab-org]
+  script:
+  - npm install
+  - SOLC_ARGS='openzeppelin-solidity=./node_modules/openzeppelin-solidity' soldoc . contracts doc -o doc/docs
+  - cd doc/website
+  - npm install
+  - npm run build
+  - cp -rf build/Aiakos/* ../../public/
+  artifacts:
+    paths:
+    - public

@@ -1,0 +1,297 @@
+<html>
+
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/github.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/twemoji-awesome-clone@1.0.0/twemoji-awesome.css">
+    <style>
+        aside {
+            width: 20%;
+            padding: 35px 55px;
+            float: left;
+        }
+
+        .content table td {
+            border: 0px;
+        }
+
+        tr {
+            line-height: 3em;
+        }
+
+        nav.navbar {
+            height: 80px;
+            padding: 0px 35px;
+        }
+
+        div.container {
+            float: left;
+            width: 60%;
+            margin: 35px 5%;
+        }
+
+        strong.method {
+            font-size: 2em;
+            padding-right: 10px;
+        }
+
+        a strong {
+            color: black;
+        }
+
+        small.generated {
+            font-size: .65em;
+            font-style: italic;
+        }
+
+        /*readme*/
+        .README li {
+            padding: 5px 40px;
+        }
+
+        .README h1,.README h2,.README h3,.README h4 {
+            margin-block-start: 0.83em;
+            margin-block-end: 0.83em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+        }
+    </style>
+    <title>soldoc</title>
+</head>
+
+<body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="https://github.com/HQ20/soldoc">
+                <h1 class="title is-1">soldoc</h1>
+            </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="index.html">
+                    Home
+                </a>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                    More soldoc
+                    </a>
+
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="https://github.com/HQ20/soldoc/wiki/About">
+                            About
+                        </a>
+                        <a class="navbar-item" href="#">
+                            Contact
+                        </a>
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" href="https://github.com/HQ20/soldoc/issues">
+                            Report an issue
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+    <aside class="menu">
+        <p class="menu-label">Aiakos</p>
+        <ul class="menu-list">
+            <li><a href="Aiakos.html#addMaintainer">addMaintainer</a></li>
+            <li><a href="Aiakos.html#deployRelease">deployRelease</a></li>
+            <li><a href="Aiakos.html#checkRelease">checkRelease</a></li>
+            <li><a href="Aiakos.html#getReleaseInfo">getReleaseInfo</a></li>
+            <li><a href="Aiakos.html#amIMaintainer">amIMaintainer</a></li>
+            <li><a href="Aiakos.html#isMaintainer">isMaintainer</a></li>
+            <li><a href="Aiakos.html#getRequiredNumberOfMaintainers">getRequiredNumberOfMaintainers</a></li>
+            <li><a href="Aiakos.html#transferOwnership">transferOwnership</a></li>
+        </ul>
+        <p class="menu-label">Migrations</p>
+        <ul class="menu-list">
+            <li><a href="Migrations.html#setCompleted">setCompleted</a></li>
+            <li><a href="Migrations.html#upgrade">upgrade</a></li>
+        </ul>
+        <p class="menu-label">Releases</p>
+        <ul class="menu-list">
+            <li><a href="Releases.html#init">init</a></li>
+            <li><a href="Releases.html#check">check</a></li>
+            <li><a href="Releases.html#addApproval">addApproval</a></li>
+        </ul>
+    </aside>
+
+    <div class="container">
+
+        <div class="notification">
+            <h1 class="title is-1" id="contractName">Releases</h1>
+            contracts&#x2F;Releases.sol
+            <small class="generated">Generated in Tue Jun 11 2019 15:29:44 GMT+0200 (Central European Summer Time)</small>
+        </div>
+
+
+        <div class="box" style="border-top: blue 1px solid;">
+            <article class="media">
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <a name="ReleaseApproved">
+                                <strong class="method">ReleaseApproved</strong>
+                            </a>
+                            <br />
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Input/Output</th>
+                                        <th>Data type</th>
+                                        <th>Variable name</th>
+                                        <th>Comment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>input</td>
+                                        <td>string</td>
+                                        <td>version</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="box">
+            <article class="media">
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <a name="init">
+                                <strong class="method">init</strong>
+                            </a>
+                            <br />
+                                <p><i>Initializes a release with provided data. </i></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Input/Output</th>
+                                        <th>Data type</th>
+                                        <th>Variable name</th>
+                                        <th>Comment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>input</td>
+                                        <td></td>
+                                        <td>release</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>input</td>
+                                        <td>string</td>
+                                        <td>version</td>
+                                        <td>The version of the release. </td>
+                                    </tr>
+                                    <tr>
+                                        <td>input</td>
+                                        <td>bytes32</td>
+                                        <td>sha256Hash</td>
+                                        <td>The integrity hash(SHA256) of the release.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="box">
+            <article class="media">
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <a name="check">
+                                <strong class="method">check</strong>
+                            </a>
+                            <br />
+                                <p><i>Checks release integrity, compare genuine hash to the input hash. </i></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Input/Output</th>
+                                        <th>Data type</th>
+                                        <th>Variable name</th>
+                                        <th>Comment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>input</td>
+                                        <td></td>
+                                        <td>release</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>input</td>
+                                        <td>bytes32</td>
+                                        <td>sha256Hash</td>
+                                        <td>The input integrity hash(SHA256).</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="box">
+            <article class="media">
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <a name="addApproval">
+                                <strong class="method">addApproval</strong>
+                            </a>
+                            <br />
+                                <p><i>Emits a ReleaseApproved event if last approval. </i></p>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Input/Output</th>
+                                        <th>Data type</th>
+                                        <th>Variable name</th>
+                                        <th>Comment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>input</td>
+                                        <td></td>
+                                        <td>release</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>input</td>
+                                        <td>address</td>
+                                        <td>maintainer</td>
+                                        <td>The address of the maintainer. </td>
+                                    </tr>
+                                    <tr>
+                                        <td>input</td>
+                                        <td>uint</td>
+                                        <td>requiredNumberOfMaintainers</td>
+                                        <td>The minimum number of approvals to trigger the actual release deployment.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</body>
+
+</html>
