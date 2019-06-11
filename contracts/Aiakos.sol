@@ -14,7 +14,7 @@ contract Aiakos is Ownable  {
   using SafeMath for uint256;
   using Roles for Roles.Role;
   using Releases for Releases.Release;
-  
+
   // Whitelist of maintainers allowed to give approval for a release version.
   Roles.Role private maintainers;
 
@@ -22,6 +22,8 @@ contract Aiakos is Ownable  {
   uint private requiredNumberOfMaintainers;
   // Record of all releases.
   mapping(string => Releases.Release) releases;
+  // Triggered when a new maintainer is added to the whitelist.
+  event MaintainerAdded(address maintainer);
 
   /**
   * @dev Deploys a new Aiakos contract.
@@ -32,7 +34,7 @@ contract Aiakos is Ownable  {
       require(_requiredNumberOfMaintainers > 0);
       requiredNumberOfMaintainers = _requiredNumberOfMaintainers;
   }
-  
+
   /**
   * @dev Adds a maintainer to the whitelist.
   * @dev Only owner of the contract can call this function.
@@ -45,10 +47,11 @@ contract Aiakos is Ownable  {
    nonEmptyAddress(_maintainerAddress)
   {
       maintainers.add(_maintainerAddress);
+      emit MaintainerAdded(_maintainerAddress);
   }
-  
+
   /**
-  * @dev Deploys a release. A maintainer add its approval for a specific version of the release. 
+  * @dev Deploys a release. A maintainer add its approval for a specific version of the release.
   * @dev If maintainer is the last to approve, the release is approved definitely and a ReleaseApproved event is emitted.
   * @dev Only whitelisted maintainers can call this function.
   * @param _version The version code of the release.
@@ -76,12 +79,12 @@ contract Aiakos is Ownable  {
       // Add approval for the current maintainer.
       release.addApproval(msg.sender, requiredNumberOfMaintainers);
   }
-  
+
   /**
   * @dev Checks the release integrity given the input hash.
   * @param _version The version of the release to check.
   * @param _sha256Hash The integrity hash to compare to valid hash.
-  */ 
+  */
   function checkRelease(string memory _version, bytes32 _sha256Hash)
    public
    view
@@ -95,15 +98,15 @@ contract Aiakos is Ownable  {
       // Revert if release does not exist.
       if(release.initialized == false){
         revert("Aiakos.checkRelease: Release does not exist.");
-      }   
+      }
       // Revert is release not yet approved.
       if(release.approved == false){
         revert("Aiakos.checkRelease: Release not approved.");
-      }   
+      }
       // Compare the input hash to the one stored for the approved release.
       release.check(_sha256Hash);
   }
-  
+
   /**
   * @dev Gets release informations.
   * @param _version The version of the release.
@@ -118,44 +121,44 @@ contract Aiakos is Ownable  {
       // Revert if release does not exist.
       if(release.initialized == false){
         revert("Aiakos.getReleaseInfo: Release does not exist.");
-      }   
+      }
       return (release.version, release.sha256Hash, release.initialized, release.approved);
   }
-  
+
   /**
   * @dev Checks if msg.sender is a whitelisted maintainer.
-  */ 
-  function amIMaintainer() 
+  */
+  function amIMaintainer()
    public
    view
    returns (bool)
   {
       return maintainers.has(msg.sender);
-  } 
-  
+  }
+
   /**
   * @dev Checks if an address belongs to a whitelisted maintainers.
   * @param _maintainerAddress The maintainer address.
   */
-  function isMaintainer(address _maintainerAddress) 
+  function isMaintainer(address _maintainerAddress)
    public
    view
    returns (bool)
   {
       return maintainers.has(_maintainerAddress);
-  }  
-  
+  }
+
   /**
   * @dev Returns the required number of maintainers.
   */
-  function getRequiredNumberOfMaintainers() 
+  function getRequiredNumberOfMaintainers()
    public
    view
    returns (uint)
   {
       return requiredNumberOfMaintainers;
   }
-  
+
   /**
   * @dev Allows the current owner to transfer control of the contract to a newOwner.
   * @param _newOwner address of the new owner
@@ -176,8 +179,8 @@ contract Aiakos is Ownable  {
     require(value != address(0));
     _;
   }
-  
-  modifier onlyMaintainer() 
+
+  modifier onlyMaintainer()
   {
     require(maintainers.has(msg.sender), "Aiakos: caller is not a maintainer.");
     _;
