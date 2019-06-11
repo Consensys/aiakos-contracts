@@ -14,6 +14,11 @@ library Releases {
         bool approved;
     }
     
+    /**
+    * @dev Initializes a release with provided data.
+    * @param version The version of the release.
+    * @param sha256Hash The integrity hash(SHA256) of the release.
+    */ 
     function init(Release storage release, string memory version, bytes32 sha256Hash)
      internal
     {
@@ -22,6 +27,10 @@ library Releases {
         release.sha256Hash = sha256Hash;
     }
     
+    /**
+    * @dev Checks release integrity, compare genuine hash to the input hash.
+    * @param sha256Hash The input integrity hash(SHA256).
+    */ 
     function check(Release storage release, bytes32 sha256Hash)
      internal
      view
@@ -31,21 +40,34 @@ library Releases {
         }
     }
     
+    /**
+    * @dev Adds approval for a specific maintainer and a specific release version.
+    * @dev Emits a ReleaseApproved event if last approval.
+    * @param maintainer The address of the maintainer.
+    * @param requiredNumberOfMaintainers The minimum number of approvals to trigger the actual release deployment.
+    */ 
     function addApproval(Release storage release, address maintainer, uint requiredNumberOfMaintainers)
      internal
      onlyNotApprovedRelease(release)
     {
+        // Check if maintainer has already given an approval for this version.
         if(release.approvals[maintainer] == true){
             revert("Aiakos.Releases.addApproval: Maintainer already approved this release.");
         }
+        // Give maintainer approval.
         release.approvals[maintainer] = true;
+        // Increment approval counter.
         release.approvalCounter++;
+        // Check if it is the last approval required.
         if(release.approvalCounter == requiredNumberOfMaintainers){
+            // Approve the release definitely.
             release.approved = true;
+            // Emit an event to notify a new version has been approved.
             emit ReleaseApproved(release.version);
         }
     }
     
+    // Triggered when a new release has been approved.
     event ReleaseApproved(string version);
     
     modifier onlyNotApprovedRelease(Release storage release)
