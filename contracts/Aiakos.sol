@@ -24,7 +24,6 @@ contract Aiakos is Ownable  {
       Ownable._transferOwnership(msg.sender);
       require(_requiredNumberOfMaintainers > 0);
       requiredNumberOfMaintainers = _requiredNumberOfMaintainers;
-      maintainers.add(msg.sender);
   }
   
   function addMaintainer(address _maintainerAddress)
@@ -43,11 +42,32 @@ contract Aiakos is Ownable  {
   {
       Releases.Release storage release = releases[_version];
       if(release.approved == true){
-        revert("release already approved.");
+        revert("Aiakos.deployRelease: Release already approved.");
       }
-      release.initialized = true;
-      release.version = _version;
-      release.sha256Hash = _sha256Hash;
+      if(release.initialized == false){
+        release.init(_version, _sha256Hash);
+      }
+      else{
+        release.check(_sha256Hash);
+      }
+      release.addApproval(msg.sender, requiredNumberOfMaintainers);
+  }
+  
+  function checkRelease(string memory _version, bytes32 _sha256Hash)
+   public
+   view
+  {
+      if(_sha256Hash == 0x0){
+        revert("Aiakos.checkRelease: Invalid input hash.");
+      }
+      Releases.Release storage release = releases[_version];
+      if(release.initialized == false){
+        revert("Aiakos.checkRelease: Release does not exist.");
+      }   
+      if(release.approved == false){
+        revert("Aiakos.checkRelease: Release not approved.");
+      }   
+      release.check(_sha256Hash);
   }
   
   function getReleaseInfo(string memory _version)
