@@ -21,9 +21,10 @@ contract Aiakos is Ownable  {
   mapping(string => Releases.Release) releases;
 
   constructor (uint _requiredNumberOfMaintainers) public{
-    Ownable._transferOwnership(msg.sender);
-    require(_requiredNumberOfMaintainers > 0);
-    requiredNumberOfMaintainers = _requiredNumberOfMaintainers;
+      Ownable._transferOwnership(msg.sender);
+      require(_requiredNumberOfMaintainers > 0);
+      requiredNumberOfMaintainers = _requiredNumberOfMaintainers;
+      maintainers.add(msg.sender);
   }
   
   function addMaintainer(address _maintainerAddress)
@@ -33,6 +34,29 @@ contract Aiakos is Ownable  {
    nonEmptyAddress(_maintainerAddress)
   {
       maintainers.add(_maintainerAddress);
+  }
+  
+  function deployRelease(string memory _version, bytes32 _sha256Hash)
+   public
+   onlyMaintainer
+   payable
+  {
+      Releases.Release storage release = releases[_version];
+      if(release.approved == true){
+        revert("release already approved.");
+      }
+      release.initialized = true;
+      release.version = _version;
+      release.sha256Hash = _sha256Hash;
+  }
+  
+  function getReleaseInfo(string memory _version)
+   public
+   view
+   returns (string memory, bytes32, bool, bool)
+  {
+      Releases.Release storage release = releases[_version];
+      return (release.version, release.sha256Hash, release.initialized, release.approved);
   }
   
   function amIMaintainer() 

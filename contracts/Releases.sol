@@ -11,5 +11,7 @@ library Releases {
         bool initialized;
         bool approved;
     }
+    
+    event ReleaseApproved(string version);
 
 }
