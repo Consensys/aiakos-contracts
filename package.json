@@ -11,16 +11,17 @@
     "dev": "webpack-dev-server"
   },
   "devDependencies": {
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
     "babel-preset-stage-3": "^6.17.0",
-    "babel-polyfill": "^6.26.0",
     "babel-register": "^6.23.0",
     "chai": "^4.0.2",
     "chai-as-promised": "^7.0.0",
     "chai-bignumber": "^2.0.0",
+    "dezalgo": "~1.0",
     "npm-check-updates": "^2.14.2",
-    "dezalgo": "~1.0"
+    "soldoc": "0.1.0-beta.3"
   },
   "main": "test.js",
   "directories": {
@@ -37,10 +38,10 @@
   "homepage": "https://github.com/PegaSysEng/aiakos-contracts",
   "dependencies": {
     "openzeppelin-solidity": "2.3.0",
-    "zos-lib": "1.4.1",
     "truffle": "^4.1.14",
     "truffle-contract": "3.0.6",
     "web3": "1.0.0-beta.36",
-    "web3-provider-engine": "^14.0.6"
+    "web3-provider-engine": "^14.0.6",
+    "zos-lib": "1.4.1"
   }
 }
