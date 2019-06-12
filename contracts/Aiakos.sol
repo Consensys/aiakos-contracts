@@ -2,7 +2,6 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Releases.sol";
 
 /**
@@ -11,7 +10,6 @@ import "./Releases.sol";
  */
 contract Aiakos is Ownable  {
 
-  using SafeMath for uint256;
   using Roles for Roles.Role;
   using Releases for Releases.Release;
 
