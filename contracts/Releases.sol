@@ -49,6 +49,7 @@ library Releases {
     function addApproval(Release storage release, address maintainer, uint requiredNumberOfMaintainers)
      internal
      onlyNotApprovedRelease(release)
+     returns (bool approvalGranted, bool releaseApproved)
     {
         // Check if maintainer has already given an approval for this version.
         if(release.approvals[maintainer] == true){
@@ -56,19 +57,16 @@ library Releases {
         }
         // Give maintainer approval.
         release.approvals[maintainer] = true;
+        approvalGranted = true;
         // Increment approval counter.
         release.approvalCounter++;
         // Check if it is the last approval required.
         if(release.approvalCounter == requiredNumberOfMaintainers){
             // Approve the release definitely.
             release.approved = true;
-            // Emit an event to notify a new version has been approved.
-            emit ReleaseApproved(release.version);
+            releaseApproved = true;
         }
     }
-    
-    // Triggered when a new release has been approved.
-    event ReleaseApproved(string version);
     
     modifier onlyNotApprovedRelease(Release storage release)
     {

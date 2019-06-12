@@ -23,7 +23,12 @@ contract Aiakos is Ownable  {
   // Record of all releases.
   mapping(string => Releases.Release) releases;
   // Triggered when a new maintainer is added to the whitelist.
-  event MaintainerAdded(address maintainer);
+  event MaintainerAdded(address indexed maintainer);
+  // Triggered when a maintainer grants approval.
+  event ApprovalGranted(address maintainer, string version);
+  // Triggered when a new release has been approved.
+  event ReleaseApproved(string version);
+
 
   /**
   * @dev Deploys a new Aiakos contract.
@@ -65,11 +70,11 @@ contract Aiakos is Ownable  {
       // Get release from storage
       Releases.Release storage release = releases[_version];
       // Check if release was already approved.
-      if(release.approved == true){
+      if(release.approved){
         revert("Aiakos.deployRelease: Release already approved.");
       }
       // Initialize release if first approval.
-      if(release.initialized == false){
+      if(!release.initialized){
         release.init(_version, _sha256Hash);
       }
       // Check if hash matches previously stored hash.
@@ -77,7 +82,15 @@ contract Aiakos is Ownable  {
         release.check(_sha256Hash);
       }
       // Add approval for the current maintainer.
-      release.addApproval(msg.sender, requiredNumberOfMaintainers);
+      (bool approvalGranted, bool releaseApproved) = release.addApproval(msg.sender, requiredNumberOfMaintainers);
+      if(approvalGranted){
+        // Emit an event to notify a new approval has been granted.
+        emit ApprovalGranted(msg.sender, _version);
+      }
+      if(releaseApproved){
+        // Emit an event to notify a new version has been approved.
+        emit ReleaseApproved(release.version);
+      }
   }
 
   /**
@@ -88,6 +101,7 @@ contract Aiakos is Ownable  {
   function checkRelease(string memory _version, bytes32 _sha256Hash)
    public
    view
+   returns(bool)
   {
       // Revert if invalid hash is provided.
       if(_sha256Hash == 0x0){
@@ -96,15 +110,16 @@ contract Aiakos is Ownable  {
       // Get release from storage.
       Releases.Release storage release = releases[_version];
       // Revert if release does not exist.
-      if(release.initialized == false){
+      if(!release.initialized){
         revert("Aiakos.checkRelease: Release does not exist.");
       }
       // Revert is release not yet approved.
-      if(release.approved == false){
+      if(!release.approved){
         revert("Aiakos.checkRelease: Release not approved.");
       }
       // Compare the input hash to the one stored for the approved release.
       release.check(_sha256Hash);
+      return true;
   }
 
   /**
