@@ -15,6 +15,7 @@ contract('Aiakos', function (accounts) {
   const requiredNumberOfMaintainers = 2;
   const releaseVersion = "1.0.0";
   const releaseHash = "0x6412de0cd1e0c7c92664a6c11629949a935eccc1c11e639d8c9c84e15cafff3a";
+  const nonGenuineHash = "0x0666ed9a1cdca4a743b852ac7f482912683089984c423ee8770e80d64e859918";
   const [
     owner,
     maintainer1,
@@ -34,7 +35,7 @@ contract('Aiakos', function (accounts) {
    isMaintainer.should.equal(true);
  });
 
- it('owner is not a maintainer', async function () {
+ it('returns false when owner verifies if he is a maintainer', async function () {
    const ownerIsMaintainer = await this.aiakos.amIMaintainer({ from: owner });
    ownerIsMaintainer.should.equal(false);
  });
@@ -46,10 +47,44 @@ contract('Aiakos', function (accounts) {
     );
  });
 
+ it('reverts when anyone is trying to add maintainer', async function () {
+   await expectRevert(
+      this.aiakos.addMaintainer(maintainer2, { from: anyone }), 'Ownable: caller is not the owner'
+    );
+ });
+
  it('reverts when non maintainer user is trying to deploy a release', async function () {
    await expectRevert(
       this.aiakos.deployRelease(releaseVersion, releaseHash, { from: anyone }), 'Aiakos: caller is not a maintainer.'
     );
+ });
+
+ it('ensures that maintainer can grant approval for a release', async function () {
+   await this.aiakos.addMaintainer(maintainer1, { from: owner });
+   const { logs } = await this.aiakos.deployRelease(releaseVersion, releaseHash, { from: maintainer1 });
+   expectEvent.inLogs(logs, 'ApprovalGranted', {maintainer: maintainer1, version: releaseVersion});
+ });
+
+ it('ensures that a release is approved when required number of approvals has been granted', async function () {
+   // owner adds the first maintainer
+   await this.aiakos.addMaintainer(maintainer1, { from: owner });
+   // owner adds the second maintainer
+   await this.aiakos.addMaintainer(maintainer2, { from: owner });
+   // first maintainer grants approval
+   await this.aiakos.deployRelease(releaseVersion, releaseHash, { from: maintainer1 });
+   // second maintainer grants approval, release must be approved
+   const { logs } = await this.aiakos.deployRelease(releaseVersion, releaseHash, { from: maintainer2 });
+   expectEvent.inLogs(logs, 'ReleaseApproved', {version: releaseVersion});
+   const releaseInfo = await this.aiakos.getReleaseInfo(releaseVersion, {from: anyone});
+   releaseInfo['0'].should.equal(releaseVersion);
+   releaseInfo['1'].should.equal(releaseHash);
+   releaseInfo['2'].should.equal(true);
+   releaseInfo['3'].should.equal(true);
+   const isReleaseOk = await this.aiakos.checkRelease(releaseVersion, releaseHash, {from: anyone});
+   isReleaseOk.should.equal(true);
+   await expectRevert(
+      this.aiakos.checkRelease(releaseVersion, nonGenuineHash, {from: anyone}), 'Aiakos.Releases.check: Mistmatch release hashes.'
+   );
  });
 
 
