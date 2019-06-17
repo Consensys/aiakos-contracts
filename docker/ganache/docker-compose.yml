@@ -1,0 +1,10 @@
+version: "3.4"
+
+services:
+  ganache:
+    build: .
+    ports:
+      - "8545:8545"
+    container_name: ganache
+    privileged: true
+    restart: always
